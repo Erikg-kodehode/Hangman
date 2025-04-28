@@ -133,6 +133,70 @@
     letter-spacing: 0.05em;
 }
 
+/* Category card specific dark mode adjustments */
+.theme-dark .category-grid {
+    gap: 1.2rem;
+}
+
+.theme-dark .category-card {
+    background-color: var(--dark-card-bg);
+    border-color: var(--dark-border);
+    color: var(--dark-text);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.theme-dark .category-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--dark-accent);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--dark-accent);
+}
+
+.theme-dark .category-card.selected {
+    border-color: var(--dark-primary);
+    background-color: var(--dark-primary);
+    color: #ffffff;
+    box-shadow: 0 4px 8px rgba(56, 189, 248, 0.3), 0 0 0 1px var(--dark-primary);
+}
+
+.theme-dark .category-icon {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.theme-dark .category-name {
+    font-weight: 500;
+}
+
+.theme-dark .category-label {
+    color: var(--dark-text);
+}
+
+.theme-dark .category-label .category-name {
+    color: var(--dark-primary);
+    font-weight: 600;
+}
+
+.theme-dark .message-text {
+    color: var(--dark-accent);
+    font-weight: 500;
+}
+
+.theme-dark .guess-toggle .btn-link {
+    color: var(--dark-primary);
+}
+
+.theme-dark .guess-toggle .btn-link:hover {
+    color: var(--dark-accent);
+    text-decoration: underline;
+}
+
+.theme-dark .result-content.success {
+    color: #4ade80; /* Brighter green for dark mode */
+}
+
+.theme-dark .result-content.failure {
+    color: #f87171; /* Brighter red for dark mode */
+}
+
 /* Global styles that work for both themes */
 body {
     background-color: var(--bg-color);

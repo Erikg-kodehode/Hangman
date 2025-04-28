@@ -1040,6 +1040,7 @@ C:\Users\erikg\Documents\Dev\Hangman\obj\Debug\net8.0\Hangman.dll
 C:\Users\erikg\Documents\Dev\Hangman\obj\Debug\net8.0\refint\Hangman.dll
 C:\Users\erikg\Documents\Dev\Hangman\obj\Debug\net8.0\Hangman.pdb
 C:\Users\erikg\Documents\Dev\Hangman\obj\Debug\net8.0\ref\Hangman.dll
-C:\Users\erikg\Documents\Dev\Hangman\obj\Debug\net8.0\compressed\05hei7dx6w-nfr7bq398p.gz
-C:\Users\erikg\Documents\Dev\Hangman\obj\Debug\net8.0\compressed\r30dbkt8b9-w27ejsy9w0.gz
-C:\Users\erikg\Documents\Dev\Hangman\obj\Debug\net8.0\compressed\eny2pt728z-gsryy3j5op.gz
+C:\Users\erikg\Documents\Dev\Hangman\obj\Debug\net8.0\Hangman.sourcelink.json
+C:\Users\erikg\Documents\Dev\Hangman\obj\Debug\net8.0\compressed\05hei7dx6w-jafhr10pu1.gz
+C:\Users\erikg\Documents\Dev\Hangman\obj\Debug\net8.0\compressed\r30dbkt8b9-lnnwplgl3g.gz
+C:\Users\erikg\Documents\Dev\Hangman\obj\Debug\net8.0\compressed\eny2pt728z-v8xr61tksh.gz

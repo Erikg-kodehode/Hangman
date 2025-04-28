@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "Hangman",
   "resources": {
-    "hash": "sha256-U7tZgpcbKuLCADU4sWDPilTL7Y/o9GmqLf/h3LqTYAE=",
+    "hash": "sha256-g5jzJZ9K0K49d1Lid0LYPlfOT4OQU1EKWKDUVyWEsV4=",
     "jsModuleNative": {
       "dotnet.native.js": "sha256-B6DNRvFeCUi3jbx9uKpuj+hV9cN0KG4RdZj1FgBZwj8="
     },
@@ -211,10 +211,10 @@
       "mscorlib.wasm": "sha256-QoC5hTKpDNO6efLnEvYwV9OJBXvYRq8/1yGhNZKiNCw=",
       "netstandard.wasm": "sha256-JT2F4bYWJpaSGq+iD0ITLpWxsDhMUjhqje9RpBtTg7w=",
       "System.Private.CoreLib.wasm": "sha256-fvIPBcvgvsRuWrKi2LGQsLYvcKUSnyIuBUsE3LJu/0Y=",
-      "Hangman.wasm": "sha256-XXZiJsnwryeAu6RN87c9JbBxr4p2JsKMaGVJZsFe9uY="
+      "Hangman.wasm": "sha256-q0YxoWFYPuAtUvrCleJ182nvGo92/LbFhDmYgndtMwE="
     },
     "pdb": {
-      "Hangman.pdb": "sha256-WF57QOCp4m8uHjE9XB1zjFMxQgd1E8ZVPAHMWMZuWUQ="
+      "Hangman.pdb": "sha256-wawmDSy4qsVC7kpHG38Pc+unCNh5LHpsiz6oDzgvhw4="
     }
   },
   "cacheBootResources": true,
