@@ -1,0 +1,29 @@
+@using Hangman.Services
+
+<ErrorBoundary>
+    <ChildContent>
+        <Router AppAssembly="@typeof(App).Assembly">
+            <Found Context="routeData">
+                <PageTitle>Hangman Game</PageTitle>
+                <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+            </Found>
+            <NotFound>
+                <PageTitle>Not found</PageTitle>
+                <LayoutView Layout="@typeof(MainLayout)">
+                    <p role="alert">Sorry, there is nothing at this address.</p>
+                </LayoutView>
+            </NotFound>
+        </Router>
+    </ChildContent>
+    <ErrorContent Context="exception">
+        <div class="alert alert-danger">
+            <h4>Error</h4>
+            <p>@exception.Message</p>
+        </div>
+    </ErrorContent>
+</ErrorBoundary>
+
+<HeadContent>
+    <link href="css/theme.css" rel="stylesheet" />
+</HeadContent>

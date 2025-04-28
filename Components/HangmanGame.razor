@@ -1,0 +1,457 @@
+@using System.Linq
+@using Microsoft.AspNetCore.Components.Web
+@using Hangman.Services
+@inject GameState GameState
+@inject WordCategoryService WordCategoryService
+
+<div class="hangman-game">
+    @if (string.IsNullOrEmpty(GameState.CurrentWord))
+    {
+        <div class="welcome-card">
+            <h2>Welcome to Hangman!</h2>
+            <p class="lead">Choose a category and test your word-guessing skills!</p>
+            
+            <div class="category-grid">
+                @foreach (WordCategory category in Enum.GetValues(typeof(WordCategory)))
+                {
+                    <div class="category-card @(selectedCategory == category ? "selected" : "")" 
+                         @onclick="() => SelectCategory(category)">
+                        <div class="category-icon">
+                            @(GetCategoryIcon(category))
+                        </div>
+                        <div class="category-name">
+                            @(WordCategoryService.GetCategoryName(category))
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <button class="btn btn-primary btn-lg animate-pulse mt-4" @onclick="StartGame">Start Game</button>
+        </div>
+    }
+    else
+    {
+        <div class="game-container">
+            <div class="game-header">
+                <button class="btn btn-outline-primary btn-sm" @onclick="ReturnToMenu">
+                    ? Back to Categories
+                </button>
+            </div>
+            <Gallows RemainingAttempts="@GameState.RemainingAttempts" />
+            
+            <div class="game-info-card">
+                <div class="category-label">
+                    Category: <span class="category-name">@WordCategoryService.GetCategoryName(selectedCategory)</span>
+                </div>
+                <div class="word-display">
+                    <h2 class="masked-word">@GameState.GetMaskedWord()</h2>
+                </div>
+                <div class="attempts-badge">
+                    Remaining attempts: <span class="attempts-number">@GameState.RemainingAttempts</span>
+                </div>
+            </div>
+
+            @if (GameState.GameOver)
+            {
+                <div class="game-over-card">
+                    @if (GameState.IsWordGuessed)
+                    {
+                        <div class="result-content success">
+                            <h3>?? Congratulations! You won! ??</h3>
+                            <p>You correctly guessed the word: <strong>@GameState.CurrentWord</strong></p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="result-content failure">
+                            <h3>Game Over</h3>
+                            <p>The word was: <strong>@GameState.CurrentWord</strong></p>
+                        </div>
+                    }
+                    <button class="btn btn-primary mt-3 animate-pulse" @onclick="StartGame">Play Again</button>
+                </div>
+            }
+            else
+            {
+                <div class="letter-input mb-4">
+                    <div class="guess-toggle mb-2">
+                        <button class="btn btn-link p-0" @onclick="ToggleWordGuess">
+                            @(showWordGuess ? "? Back to letter guess" : "Guess full word ?")
+                        </button>
+                    </div>
+                    @if (showWordGuess)
+                    {
+                        <div class="word-guess-container">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Enter your guess" 
+                                       @bind="WordGuess" @onkeyup="HandleWordKeyUp" />
+                                <button class="btn btn-primary" @onclick="MakeWordGuess">Guess Word</button>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Enter a letter" 
+                                   @bind="CurrentGuess" @onkeyup="HandleKeyUp" maxlength="1" />
+                            <button class="btn btn-primary" @onclick="MakeGuess">Guess</button>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(message))
+                    {
+                        <div class="message-text mt-2">@message</div>
+                    }
+                </div>
+
+                <div class="guessed-letters-card">
+                    <h5>Guessed Letters</h5>
+                    <div class="letters-container">
+                        @foreach (var letter in GameState.GuessedLetters.OrderBy(l => l))
+                        {
+                            <span class="letter-badge">@letter</span>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .hangman-game {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin: 2rem 0;
+    }
+
+    .category-card {
+        background-color: var(--card-bg);
+        border: 2px solid var(--border-color);
+        border-radius: 10px;
+        padding: 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .category-card:hover {
+        transform: translateY(-2px);
+        border-color: var(--primary-color);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .category-card.selected {
+        border-color: var(--primary-color);
+        background-color: var(--primary-color);
+        color: var(--card-bg);
+    }
+
+    .category-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .category-name {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .category-label {
+        text-align: center;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+        font-size: 1.1rem;
+    }
+
+    .category-label .category-name {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    .welcome-card {
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        padding: 40px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .game-info-card {
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        padding: 20px;
+        margin: 20px 0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .masked-word {
+        font-size: 2.5rem;
+        letter-spacing: 8px;
+        text-align: center;
+        margin: 0;
+        color: var(--text-color);
+    }
+
+    .attempts-badge {
+        text-align: center;
+        font-size: 1.2rem;
+        margin-top: 15px;
+        color: var(--text-color);
+    }
+
+    .attempts-number {
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+
+    .input-card {
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        padding: 20px;
+        margin: 20px 0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .message-text {
+        margin-top: 10px;
+        color: var(--accent-color);
+    }
+
+    .guessed-letters-card {
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        padding: 20px;
+        margin: 20px 0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .letters-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .letter-badge {
+        background-color: var(--accent-color);
+        color: var(--card-bg);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: bold;
+        opacity: 0;
+        transform: scale(0.5);
+        animation: pop-in 0.3s ease-out forwards;
+    }
+
+    .game-over-card {
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        padding: 30px;
+        margin: 20px 0;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        animation: slide-in 0.5s ease-out;
+    }
+
+    .result-content {
+        margin-bottom: 20px;
+    }
+
+    .result-content.success {
+        color: #48bb78;
+    }
+
+    .result-content.failure {
+        color: #f56565;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s infinite;
+    }
+
+    .guess-toggle {
+        text-align: right;
+    }
+
+    .guess-toggle .btn-link {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.3s ease;
+    }
+
+    .guess-toggle .btn-link:hover {
+        color: var(--accent-color);
+        text-decoration: underline;
+    }
+
+    .word-guess-container {
+        animation: slide-down 0.3s ease-out;
+    }
+
+    @@keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    @@keyframes pop-in {
+        from {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @@keyframes slide-in {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes slide-down {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+@code {
+    private string CurrentGuess { get; set; } = string.Empty;
+    private string WordGuess { get; set; } = string.Empty;
+    private string message = string.Empty;
+    private bool showWordGuess = false;
+    private WordCategory selectedCategory = WordCategory.CommonWords;
+
+    private void SelectCategory(WordCategory category)
+    {
+        selectedCategory = category;
+    }
+
+    private string GetCategoryIcon(WordCategory category) => category switch
+    {
+        WordCategory.CommonWords => "??",
+        WordCategory.Animals => "??",
+        WordCategory.Countries => "??",
+        WordCategory.FoodAndDrinks => "??",
+        WordCategory.Sports => "?",
+        WordCategory.Technology => "??",
+        _ => "??"
+    };
+
+    private async Task StartGame()
+    {
+        await GameState.StartNewGameAsync(selectedCategory);
+        CurrentGuess = string.Empty;
+        WordGuess = string.Empty;
+        message = string.Empty;
+        showWordGuess = false;
+    }
+
+    private void ToggleWordGuess()
+    {
+        showWordGuess = !showWordGuess;
+        CurrentGuess = string.Empty;
+        WordGuess = string.Empty;
+        message = string.Empty;
+    }
+
+    private void MakeWordGuess()
+    {
+        if (string.IsNullOrWhiteSpace(WordGuess))
+        {
+            message = "Please enter a word.";
+            return;
+        }
+
+        var (isCorrect, isGameOver) = GameState.GuessFullWord(WordGuess);
+        
+        if (isCorrect)
+        {
+            message = "Congratulations! You guessed the word!";
+        }
+        else
+        {
+            message = $"'{WordGuess}' is not the correct word.";
+        }
+
+        WordGuess = string.Empty;
+    }
+
+    private void MakeGuess()
+    {
+        if (string.IsNullOrEmpty(CurrentGuess))
+        {
+            message = "Please enter a letter.";
+            return;
+        }
+
+        if (!char.IsLetter(CurrentGuess[0]))
+        {
+            message = "Please enter a valid letter.";
+            CurrentGuess = string.Empty;
+            return;
+        }
+
+        bool isNewGuess = GameState.MakeGuess(CurrentGuess[0]);
+        
+        if (!isNewGuess)
+        {
+            message = $"You've already guessed '{char.ToUpper(CurrentGuess[0])}'.";
+        }
+        else
+        {
+            message = string.Empty;
+        }
+
+        CurrentGuess = string.Empty;
+    }
+
+    private void HandleWordKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            MakeWordGuess();
+        }
+    }
+
+        private void ReturnToMenu()
+    {
+        GameState.Reset();
+        CurrentGuess = string.Empty;
+        WordGuess = string.Empty;
+        message = string.Empty;
+        showWordGuess = false;
+    }
+
+    private void HandleKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            MakeGuess();
+        }
+    }
+}
+
+

@@ -1,0 +1,156 @@
+:root {
+    /* Light theme variables */
+    --light-bg: #f5f7fa;
+    --light-text: #2d3748;
+    --light-primary: #4299e1;
+    --light-secondary: #a0aec0;
+    --light-accent: #667eea;
+    --light-card-bg: #ffffff;
+    --light-border: #e2e8f0;
+    --light-input-bg: #ffffff;
+    --light-input-text: #2d3748;
+    --light-heading: #2d3748;
+
+    /* Dark theme variables - adjusted for better contrast */
+    --dark-bg: #0f172a;
+    --dark-text: #e2e8f0;
+    --dark-primary: #38bdf8;
+    --dark-secondary: #94a3b8;
+    --dark-accent: #60a5fa;
+    --dark-card-bg: #1e293b;
+    --dark-border: #475569;
+    --dark-input-bg: #334155;
+    --dark-input-text: #f1f5f9;
+    --dark-heading: #ffffff;  /* Bright white for headings */
+}
+
+/* Light theme (default) */
+.theme-light {
+    --bg-color: var(--light-bg);
+    --text-color: var(--light-text);
+    --primary-color: var(--light-primary);
+    --secondary-color: var(--light-secondary);
+    --accent-color: var(--light-accent);
+    --card-bg: var(--light-card-bg);
+    --border-color: var(--light-border);
+    --input-bg: var(--light-input-bg);
+    --input-text: var(--light-input-text);
+    --heading-color: var(--light-heading);
+}
+
+/* Dark theme */
+.theme-dark {
+    --bg-color: var(--dark-bg);
+    --text-color: var(--dark-text);
+    --primary-color: var(--dark-primary);
+    --secondary-color: var(--dark-secondary);
+    --accent-color: var(--dark-accent);
+    --card-bg: var(--dark-card-bg);
+    --border-color: var(--dark-border);
+    --input-bg: var(--dark-input-bg);
+    --input-text: var(--dark-input-text);
+    --heading-color: var(--dark-heading);
+}
+
+/* Dark mode specific adjustments */
+.theme-dark {
+    color: var(--dark-text);
+}
+
+.theme-dark .navbar {
+    background-color: var(--dark-card-bg);
+    border-color: var(--dark-border);
+}
+
+.theme-dark .navbar-brand {
+    color: var(--dark-text) !important;
+}
+
+.theme-dark h1, 
+.theme-dark h2, 
+.theme-dark h3, 
+.theme-dark h4, 
+.theme-dark h5 {
+    color: var(--heading-color);
+}
+
+.theme-dark .lead {
+    color: var(--dark-text);
+}
+
+.theme-dark .card,
+.theme-dark .input-card,
+.theme-dark .guessed-letters-card,
+.theme-dark .welcome-card,
+.theme-dark .game-info-card,
+.theme-dark .game-over-card {
+    background-color: var(--dark-card-bg);
+    border-color: var(--dark-border);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+.theme-dark .guessed-letters-card h5 {
+    color: var(--dark-heading);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.theme-dark .welcome-card h2,
+.theme-dark .welcome-card .lead {
+    color: var(--dark-heading);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.theme-dark .form-control {
+    background-color: var(--dark-input-bg);
+    border-color: var(--dark-border);
+    color: var(--dark-input-text);
+}
+
+.theme-dark .form-control::placeholder {
+    color: var(--dark-secondary);
+}
+
+.theme-dark .form-control:focus {
+    background-color: var(--dark-input-bg);
+    border-color: var(--dark-primary);
+    color: var(--dark-input-text);
+    box-shadow: 0 0 0 0.2rem rgba(56, 189, 248, 0.25);
+}
+
+.theme-dark .masked-word {
+    color: var(--dark-primary);
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+}
+
+.theme-dark .letter-badge {
+    background-color: var(--dark-accent);
+    color: var(--dark-text);
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+}
+
+/* Global styles that work for both themes */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.form-control {
+    transition: all 0.3s ease;
+}
+
+.card {
+    transition: all 0.3s ease;
+}
+
+.guessed-letters-card h5 {
+    color: var(--heading-color);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}

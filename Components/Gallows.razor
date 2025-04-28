@@ -1,0 +1,97 @@
+@* Gallows.razor *@
+<div class="gallows-container">
+    <svg width="200" height="250" class="gallows">
+        @* Gallows structure - always visible *@
+        <g class="gallows-structure">
+            <line x1="40" y1="230" x2="160" y2="230"/>  @* Base *@
+            <line x1="100" y1="230" x2="100" y2="30"/>   @* Vertical beam *@
+            <line x1="100" y1="30" x2="150" y2="30"/>    @* Horizontal beam *@
+            <line x1="150" y1="30" x2="150" y2="50"/>    @* Rope *@
+        </g>
+
+        @* Hanging man parts - shown based on remaining attempts *@
+        @if (RemainingAttempts <= 5)
+        {
+            <circle cx="150" cy="70" r="20" class="hangman-part active"/>  @* Head *@
+        }
+        @if (RemainingAttempts <= 4)
+        {
+            <line x1="150" y1="90" x2="150" y2="150" class="hangman-part active"/>    @* Body *@
+        }
+        @if (RemainingAttempts <= 3)
+        {
+            <line x1="150" y1="110" x2="120" y2="130" class="hangman-part active"/>   @* Left arm *@
+        }
+        @if (RemainingAttempts <= 2)
+        {
+            <line x1="150" y1="110" x2="180" y2="130" class="hangman-part active"/>   @* Right arm *@
+        }
+        @if (RemainingAttempts <= 1)
+        {
+            <line x1="150" y1="150" x2="120" y2="180" class="hangman-part active"/>   @* Left leg *@
+        }
+        @if (RemainingAttempts <= 0)
+        {
+            <line x1="150" y1="150" x2="180" y2="180" class="hangman-part active"/>   @* Right leg *@
+        }
+    </svg>
+</div>
+
+<style>
+    .gallows-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+        padding: 20px;
+        background-color: var(--card-bg);
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .gallows {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .gallows-structure line {
+        stroke: var(--text-color);
+        stroke-width: 4;
+        transition: stroke 0.3s ease;
+    }
+
+    .hangman-part {
+        stroke: var(--primary-color);
+        stroke-width: 4;
+        fill: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .hangman-part.active {
+        opacity: 1;
+        animation: appear 0.5s ease-out forwards;
+    }
+
+    @@keyframes appear {
+        from {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .gallows-container:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+</style>
+
+@code {
+    [Parameter]
+    public int RemainingAttempts { get; set; }
+}

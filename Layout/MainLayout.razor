@@ -1,0 +1,70 @@
+@using Hangman.Services
+@inherits LayoutComponentBase
+@inject ThemeService ThemeService
+@implements IDisposable
+
+<div class="page @(ThemeService.IsDarkMode ? "theme-dark" : "theme-light")">
+    <header class="navbar navbar-expand">
+        <div class="container-fluid">
+            <a class="navbar-brand">Hangman Game</a>
+        </div>
+    </header>
+
+    <main class="container mt-4">
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+
+    <footer class="border-top footer text-muted mt-5">
+        <div class="container text-center py-3">
+            &copy; 2025 - Hangman Game
+        </div>
+    </footer>
+
+    <ThemeSwitch />
+</div>
+
+<style>
+    .navbar {
+        background-color: var(--card-bg);
+        border-bottom: 1px solid var(--border-color);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 1rem;
+    }
+
+    .navbar-brand {
+        color: var(--text-color);
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .footer {
+        background-color: var(--card-bg);
+        border-color: var(--border-color) !important;
+        color: var(--text-color) !important;
+    }
+
+    .page {
+        min-height: 100vh;
+        background-color: var(--bg-color);
+        transition: background-color 0.3s ease;
+    }
+</style>
+
+@code {
+    protected override void OnInitialized()
+    {
+        ThemeService.OnThemeChange += OnThemeChanged;
+    }
+
+    private void OnThemeChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        ThemeService.OnThemeChange -= OnThemeChanged;
+    }
+}
