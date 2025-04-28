@@ -2,9 +2,10 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
-    
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
@@ -14,29 +15,35 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
+      - uses: actions/checkout@v4
+
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
-          
+          dotnet-version: "8.0.x" # Match your project's .NET version
+
       - name: Publish .NET Project
-        run: dotnet publish -c Release -o release --nologo
-      
+        run: dotnet publish Hangman.csproj -c Release -o release --nologo
+        # Optional: Explicitly specify the project file if needed, e.g., Hangman.csproj
+
+      # Update base href in index.html
       - name: Change base tag in index.html from / to Hangman
-        run: sed -i 's/<base href="\/" \/>/<base href="\/Hangman\/" \/>/g' release/wwwroot/index.html
-      
+        run: sed -i 's/<base href="\/"\s*\/>/<base href="\/Hangman\/" \/>/g' release/wwwroot/index.html
+        # Note: Assumes your repo name is "Hangman". Change if needed.
+        # The \s* makes the space before /> optional in the match
+
+      # Add .nojekyll file to disable Jekyll processing
       - name: Add .nojekyll file
         run: touch release/wwwroot/.nojekyll
-        
+
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: 'release/wwwroot'
+          # Upload the wwwroot folder from the publish directory
+          path: "release/wwwroot"
 
   deploy:
-    needs: build
+    needs: build # Runs only after the build job completes successfully
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -44,5 +51,5 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
-
+        uses: actions/deploy-pages@v3
+        # This action automatically deploys the artifact uploaded by upload-pages-artifact
